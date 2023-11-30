@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +47,33 @@ class LocoMigrationTest {
 
         // Verify the result
         assertEquals(mockData, result);
+    }
+
+    @Test
+    void testFetchAndSaveData() {
+        // Mock data
+        List<LocoDataMongo> locoMongoList = new ArrayList<>();
+        locoMongoList.add(new LocoDataMongo("1","1", "Loco1", "Dimension1", "Good", LocalDateTime.now()));
+        locoMongoList.add(new LocoDataMongo("2","2", "Loco2", "Dimension2", "Poor", LocalDateTime.now()));
+
+        // Mock behavior of the repositories
+        when(locoMongoRepository.findAll()).thenReturn(locoMongoList);
+        when(locoMySQLRepository.existsById(anyString())).thenReturn(false);
+
+        // Call the service method
+        locoMigration.fetchAndSaveData();
+
+        // Verify that the repository's save method was called for each locoMongo data
+        for (LocoDataMongo locoMongo : locoMongoList) {
+            verify(locoMySQLRepository, times(1)).existsById(eq(locoMongo.getLocoCode()));
+            verify(locoMySQLRepository, times(1)).save(argThat(locoDataMySQL ->
+                    locoDataMySQL.getLocoCode().equals(locoMongo.getLocoCode()) &&
+                            locoDataMySQL.getLocoName().equals(locoMongo.getLocoName()) &&
+                            locoDataMySQL.getLocoDimension().equals(locoMongo.getLocoDimension()) &&
+                            locoDataMySQL.getLocoStatus().equals(locoMongo.getStatus()) &&
+                            locoDataMySQL.getDateTime().equals(locoMongo.getTime())
+            ));
+        }
     }
 
     @Test

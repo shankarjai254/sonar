@@ -85,7 +85,7 @@ public class TelegramReport {
         }
     }
 
-    private String formatReport(LocoDataMySQLReport report) {
+    public String formatReport(LocoDataMySQLReport report) {
         // Format the report data into a string
         // Modify this according to your report structure
         return  "Latest Summray Loco" +
