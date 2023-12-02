@@ -34,17 +34,13 @@ pipeline {
     }
 
     post {
-    always {
-        script {
-            // Notifikasi Telegram atau langkah-langkah lainnya
-            buildNotify(
-                message: "Pipeline finished: ${currentBuild.result}",
-                recipient: "725260461",  // Ganti dengan username atau ID obrolan Telegram Anda
-                status: currentBuild.resultIsBetterOrEqualTo("SUCCESS") ? "SUCCESS" : "FAILURE"
-            )
+        always {
+            script {
+                // Pastikan Anda telah mengkonfigurasi 'Telegram Bot Token' dan 'Chat ID' di Jenkins System Configuration
+                telegramSend(message: "Pipeline finished: ${currentBuild.result}", chatId: '725260461')
+            }
         }
     }
-}
 
 
 }
