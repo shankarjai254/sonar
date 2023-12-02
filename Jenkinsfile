@@ -21,4 +21,17 @@ pipeline {
             }
         }
     }
+    stage('End') {
+            steps {
+                script {
+                    // Add Telegram Notification Step at the end
+                    telegramSend(
+                        message: "SonarQube analysis pipeline completed: ${currentBuild.result}",
+                        chatId: "725260461",  // Replace with your Telegram chat ID
+                        token: env.token_telegram
+                    )
+                }
+            }
+        }
+    }
 }
