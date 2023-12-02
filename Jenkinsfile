@@ -29,17 +29,17 @@ pipeline {
                 }
             }
         }
+    }
 
-        post {
-            always {
-                script {
-                    // Notifikasi Telegram atau langkah-langkah lainnya
-                    buildNotify(
-                        message: "Pipeline finished: ${currentBuild.result}",
-                        recipient: "725260461",  // Ganti dengan username atau ID obrolan Telegram Anda
-                        status: currentBuild.resultIsBetterOrEqualTo("SUCCESS") ? "SUCCESS" : "FAILURE"
-                    )
-                }
+    post {
+        always {
+            script {
+                // Notifikasi Telegram atau langkah-langkah lainnya
+                buildNotify(
+                    message: "Pipeline finished: ${currentBuild.result}",
+                    recipient: "725260461",  // Ganti dengan username atau ID obrolan Telegram Anda
+                    status: currentBuild.resultIsBetterOrEqualTo("SUCCESS") ? "SUCCESS" : "FAILURE"
+                )
             }
         }
     }
