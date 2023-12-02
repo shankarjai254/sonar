@@ -36,7 +36,12 @@ pipeline {
     post {
     always {
         script {
-            echo "Pipeline finished: ${currentBuild.result}"
+            // Notifikasi Telegram atau langkah-langkah lainnya
+            buildNotify(
+                message: "Pipeline finished: ${currentBuild.result}",
+                recipient: "your_telegram_username_or_chat_id",  // Ganti dengan username atau ID obrolan Telegram Anda
+                status: currentBuild.resultIsBetterOrEqualTo("SUCCESS") ? "SUCCESS" : "FAILURE"
+            )
         }
     }
 }
