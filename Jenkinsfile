@@ -12,14 +12,14 @@ pipeline {
             }
         }
 
-        stage('Run Spring Report') {
-            steps {
-                script {
-                    // Ganti perintah berikut dengan yang sesuai untuk menjalankan laporan Spring
-                    bat 'start /B mvnw.cmd spring-boot:run'
-                }
-            }
-        }
+        // stage('Run Spring Report') {
+        //     steps {
+        //         script {
+        //             // Ganti perintah berikut dengan yang sesuai untuk menjalankan laporan Spring
+        //             bat 'start /B mvnw.cmd spring-boot:run'
+        //         }
+        //     }
+        // }
 
         stage('SonarQube Analysis') {
             steps {
