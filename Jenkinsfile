@@ -23,15 +23,14 @@ pipeline {
     }
 
     post {
-        always {
-            script {
-                // Add Telegram Notification Step at the end
-                telegramSend(
-                    message: "SonarQube analysis pipeline completed: ${currentBuild.result}",
-                    chatId: "725260461",  // Replace with your Telegram chat ID
-                    token: env.token_telegram
-                )
-            }
+    always {
+        script {
+            buildNotify(
+                message: "SonarQube analysis pipeline completed: ${currentBuild.result}",
+                recipient: "725260461",  // Replace with your Telegram username or chat ID
+                status: currentBuild.result.toString()
+            )
         }
     }
+}
 }
