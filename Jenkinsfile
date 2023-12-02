@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {
                     // Ganti perintah berikut dengan yang sesuai untuk menjalankan laporan Spring
-                    sh 'mvn spring-boot:run'
+                    bat 'mvnw.cmd spring-report-plugin:run'
                 }
             }
         }
