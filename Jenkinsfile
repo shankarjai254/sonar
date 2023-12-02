@@ -48,10 +48,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            // Cleanup or additional steps that should always be executed
-        }
-    }
 }
