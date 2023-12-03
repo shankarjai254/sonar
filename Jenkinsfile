@@ -33,8 +33,8 @@ pipeline {
 
     post {
         always {
-            withCredentials([string(credentialsId: TELEGRAM_TOKEN_ID, variable: 'TELEGRAM_TOKEN'), string(credentialsId: TELEGRAM_CHAT_ID_ID, variable: 'TELEGRAM_CHAT_ID')]) {
-                sh 'curl --location --request POST "https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage" --form text="Pipeline finished: ${currentBuild.result}" --form chat_id="$TELEGRAM_CHAT_ID"'
+            withCredentials([string(credentialsId: 'telegram-credentials', variable: 'TELEGRAM_TOKEN'), string(credentialsId: 'Telegram_ChatID', variable: 'TELEGRAM_CHAT_ID')]) {
+                sh "C:\\curl-8.4.0_7-win64-mingw\\curl-8.4.0_7-win64-mingw\\bin\\curl.exe --location --request POST 'https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage' --form text='Pipeline finished: ${currentBuild.result}' --form chat_id='$TELEGRAM_CHAT_ID'"
             }
         }
     }
