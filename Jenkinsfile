@@ -35,7 +35,7 @@ pipeline {
                 script {
                     try {
                         // Menggunakan perintah curl untuk mengirim notifikasi ke Telegram
-                        sh "${CURL_PATH} --location --request POST 'https://api.telegram.org/bot6356002838:AAE48btgtfdOlX-Zz0RYI9tC7Rhg4a43Sf4/sendMessage' --form 'text=Hello Zydd' --form 'chat_id=725260461'"
+                        sh 'curl --location --request POST "https://api.telegram.org/bot6356002838:AAE48btgtfdOlX-Zz0RYI9tC7Rhg4a43Sf4/sendMessage" --form "text=Hello Zydd" --form "chat_id=725260461"'
                         echo "Telegram notification sent successfully"
                     } catch (Exception e) {
                         currentBuild.result = 'FAILURE'
