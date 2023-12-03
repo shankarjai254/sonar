@@ -34,7 +34,7 @@ pipeline {
     post {
         always {
             script {
-                sh 'curl --version'
+                bat 'curl --version'
             }
         }
     }
