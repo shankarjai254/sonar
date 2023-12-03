@@ -34,14 +34,17 @@ pipeline {
     success {
         script {
             def TEXT_SUCCESS_BUILD = "Build Success: ${BUILD_URL}"
-            bat "curl --location --request POST 'https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage' --form text='${TEXT_SUCCESS_BUILD}' --form chat_id='${TELEGRAM_CHAT_ID}'"
+            def crumb = bat(script: 'curl -u "${JENKINS_USER}:${JENKINS_TOKEN}" -s "http://localhost:9090/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)"', returnStatus: true).trim()
+            bat "curl -u ${JENKINS_USER}:${JENKINS_TOKEN} --location --request POST 'http://localhost:9090/job/sonar/${BUILD_NUMBER}/input/YourInput/submit?delay=0sec' --header '${crumb}' --form text='${TEXT_SUCCESS_BUILD}' --form chat_id='${TELEGRAM_CHAT_ID}'"
         }
     }
     failure {
         script {
             def TEXT_FAILURE_BUILD = "Build Failure: ${BUILD_URL}"
-            bat "curl --location --request POST 'https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage' --form text='${TEXT_FAILURE_BUILD}' --form chat_id='${TELEGRAM_CHAT_ID}'"
+            def crumb = bat(script: 'curl -u "${JENKINS_USER}:${JENKINS_TOKEN}" -s "http://localhost:9090/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)"', returnStatus: true).trim()
+            bat "curl -u ${JENKINS_USER}:${JENKINS_TOKEN} --location --request POST 'http://localhost:9090/job/sonar/${BUILD_NUMBER}/input/YourInput/submit?delay=0sec' --header '${crumb}' --form text='${TEXT_FAILURE_BUILD}' --form chat_id='${TELEGRAM_CHAT_ID}'"
         }
     }
 }
+
 }
