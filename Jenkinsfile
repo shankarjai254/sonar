@@ -30,16 +30,13 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            script {
-                sh "curl --location --request POST 'https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage' --form text='Build Successful: ${JOB_NAME} #${BUILD_NUMBER}' --form chat_id='${TELEGRAM_CHAT_ID}'"
-            }
-        }
-        failure {
-            script {
-                sh "curl --location --request POST 'https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage' --form text='Build Failed: ${JOB_NAME} #${BUILD_NUMBER}' --form chat_id='${TELEGRAM_CHAT_ID}'"
+   post {
+    always {
+        script {
+            withCredentials([string(credentialsId: 'telegram-credentials', variable: 'TELEGRAM_TOKEN'), string(credentialsId: 'Telegram_ChatID', variable: 'TELEGRAM_CHAT_ID')]) {
+                sh "curl --location --request POST 'https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage' --form text='Pipeline finished: ${currentBuild.result}' --form chat_id='$TELEGRAM_CHAT_ID'"
             }
         }
     }
+}
 }
