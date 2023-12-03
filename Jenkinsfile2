@@ -32,7 +32,8 @@ pipeline {
                 echo 'Testing..'
             }
         }
-    
+    } // Closing the 'stages' block
+
     post {
         success {
             script{
@@ -44,6 +45,5 @@ pipeline {
                 sh "curl --location --request POST 'https://api.telegram.org/bot${TOKEN}/sendMessage' --form text='${TEXT_FAILURE_BUILD}' --form chat_id='${CHAT_ID}'"
             }
         }
-    }
-
-}
+    } 
+} 
