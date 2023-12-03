@@ -4,6 +4,12 @@ pipeline {
         maven 'Maven'
     }
 
+    environment {
+        // Telegram credential IDs
+        TELEGRAM_TOKEN = credentials('telegram-credentials')  // Ganti dengan ID kredensial Anda
+        TELEGRAM_CHAT_ID = credentials('Telegram_ChatID')  // Ganti dengan ID kredensial Anda
+    }
+
     stages {
         stage('Git Checkout') {
             steps {
@@ -11,15 +17,6 @@ pipeline {
                 echo 'Git Checkout Completed'
             }
         }
-
-        // stage('Run Spring Report') {
-        //     steps {
-        //         script {
-        //             // Ganti perintah berikut dengan yang sesuai untuk menjalankan laporan Spring
-        //             bat 'start /B mvnw.cmd spring-boot:run'
-        //         }
-        //     }
-        // }
 
         stage('SonarQube Analysis') {
             steps {
@@ -36,11 +33,10 @@ pipeline {
     post {
         always {
             script {
-                // Pastikan Anda telah mengkonfigurasi 'Telegram Bot Token' dan 'Chat ID' di Jenkins System Configuration
-                telegramSend(message: "Pipeline finished: ${currentBuild.result}", chatId: '725260461')
+                // Pastikan Anda telah mengkonfigurasi 'Telegram Token' dan 'Chat ID' di Jenkins System Configuration
+                def statusMessage = "Pipeline finished: ${currentBuild.result}"
+                telegramSend(message: statusMessage, chatIdCredentialId: TELEGRAM_CHAT_ID, tokenCredentialId: TELEGRAM_TOKEN)
             }
         }
     }
-
-
 }
