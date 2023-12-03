@@ -35,7 +35,7 @@ pipeline {
     always {
         script {
             try {
-                sh 'curl --location --request POST "https://api.telegram.org/bot6356002838:AAE48btgtfdOlX-Zz0RYI9tC7Rhg4a43Sf4/sendMessage" --form "text=Hello Zydd" --form "chat_id=725260461"'
+                bat 'start /b curl --location --request POST "https://api.telegram.org/bot6356002838:AAE48btgtfdOlX-Zz0RYI9tC7Rhg4a43Sf4/sendMessage" --form "text=Hello Zydd" --form "chat_id=725260461"'
             } catch (Exception e) {
                 currentBuild.result = 'FAILURE'
                 echo "Error: ${e.message}"
@@ -43,6 +43,7 @@ pipeline {
         }
     }
 }
+
 
 
 }
