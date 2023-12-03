@@ -15,8 +15,8 @@ pipeline {
             steps {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/ZudaPradana/sonar']])
                 echo 'Git Checkout Completed'
-                echo "Token: ${TOKEN}"
-                echo "Chat ID: ${CHAT_ID}"
+                echo "Token: ${TELEGRAM_TOKEN}"
+                echo "Chat ID: ${TELEGRAM_CHAT_ID}"
 
             }
         }
@@ -33,4 +33,12 @@ pipeline {
         }
     }
 
+    post {
+        always {
+            script {
+                def TEXT_MESSAGE = "Hello Zydd"
+                sh "curl --location --request POST 'https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage' --form text='${TEXT_MESSAGE}' --form chat_id='${TELEGRAM_CHAT_ID}'"
+            }
+        }
+    }
 }
