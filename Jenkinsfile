@@ -33,18 +33,30 @@ pipeline {
         stage('Notify Telegram') {
             steps {
                 script {
-                    try {
-                        // Menggunakan perintah curl untuk mengirim notifikasi ke Telegram
-                        sh 'curl --location --request POST "https://api.telegram.org/bot6356002838:AAE48btgtfdOlX-Zz0RYI9tC7Rhg4a43Sf4/sendMessage" --form "text=Hello Zydd" --form "chat_id=725260461"'
-                        echo "Telegram notification sent successfully"
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        echo "Error: ${e.message}"
+                    withCredentials([string(credentialsId: 'telegram-credentials', variable: 'telegramToken'),
+                                     string(credentialsId: 'Telegram_ChatID', variable: 'telegramChatId')]) {
+
+                        try {
+                            def response = sh(script: """
+                                curl --location --request POST \
+                                "https://api.telegram.org/bot${telegramToken}/sendMessage" \
+                                --form "text=Hello Zydd" \
+                                --form "chat_id=${telegramChatId}"
+                            """, returnStatus: true)
+
+                            if (response == 0) {
+                                echo "Telegram notification sent successfully"
+                            } else {
+                                error "Failed to send Telegram notification"
+                            }
+                        } catch (Exception e) {
+                            currentBuild.result = 'FAILURE'
+                            echo "Error: ${e.message}"
+                        }
                     }
                 }
             }
         }
-    }
     
-
+    }
 }
