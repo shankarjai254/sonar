@@ -31,10 +31,14 @@ pipeline {
     }
 
     post {
-        always {
+        success {
             script {
-                // Pastikan Anda telah mengkonfigurasi 'Telegram Bot Token' dan 'Chat ID' di Jenkins System Configuration
-                telegramSend(message: "Hello Zydd", chatId: TELEGRAM_CHAT_ID)
+                sh "curl --location --request POST 'https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage' --form text='Build Successful: ${JOB_NAME} #${BUILD_NUMBER}' --form chat_id='${TELEGRAM_CHAT_ID}'"
+            }
+        }
+        failure {
+            script {
+                sh "curl --location --request POST 'https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage' --form text='Build Failed: ${JOB_NAME} #${BUILD_NUMBER}' --form chat_id='${TELEGRAM_CHAT_ID}'"
             }
         }
     }
