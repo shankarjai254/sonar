@@ -8,7 +8,6 @@ pipeline {
         // Telegram credential IDs
         TELEGRAM_TOKEN = credentials('telegram-credentials')  // Ganti dengan ID kredensial Anda
         TELEGRAM_CHAT_ID = credentials('Telegram_ChatID')  // Ganti dengan ID kredensial Anda
-        CURL_PATH = sh(script: "which curl", returnStdout: true).trim()
     }
 
     stages {
@@ -34,8 +33,8 @@ pipeline {
     post {
         always {
             script {
-                def TEXT_MESSAGE = "Hello Zydd"
-                sh "${CURL_PATH} --location --request POST 'https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage' --form text='${TEXT_MESSAGE}' --form chat_id='${TELEGRAM_CHAT_ID}'"
+                // Pastikan Anda telah mengkonfigurasi 'Telegram Bot Token' dan 'Chat ID' di Jenkins System Configuration
+                telegramSend(message: "Hello Zydd", chatId: TELEGRAM_CHAT_ID)
             }
         }
     }
