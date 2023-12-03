@@ -9,6 +9,7 @@ pipeline {
         // These are the IDs of the stored credentials, not the actual token and chat ID values
         TELEGRAM_TOKEN_ID = 'telegram-credentials'
         TELEGRAM_CHAT_ID_ID = 'Telegram_ChatID'
+        CURL_PATH = 'C:\\curl-8.4.0_7-win64-mingw\\curl-8.4.0_7-win64-mingw\\bin\\curl.exe'
     }
 
     stages {
@@ -34,7 +35,7 @@ pipeline {
     post {
         always {
             script {
-                bat 'curl --version'
+                bat '${CURL_PATH} --version'
             }
         }
     }
