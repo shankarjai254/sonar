@@ -34,7 +34,7 @@ pipeline {
     post {
         always {
             script {
-                bat 'C:\\curl-8.4.0_7-win64-mingw\\curl-8.4.0_7-win64-mingw\\bin\\curl.exe --location --request POST "https://api.telegram.org/bot6356002838:AAE48btgtfdOlX-Zz0RYI9tC7Rhg4a43Sf4/sendMessage" --form "text=Hello Zydd" --form "chat_id=725260461"'
+                sh 'curl --version'
             }
         }
     }
