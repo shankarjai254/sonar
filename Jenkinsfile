@@ -32,10 +32,11 @@ pipeline {
     }
 
      post {
-        always {
-            script {
-                sh "curl --location --request POST 'https://api.telegram.org/bot6356002838:AAE48btgtfdOlX-Zz0RYI9tC7Rhg4a43Sf4/sendMessage' --form text='Hello Zydd' --form chat_id='725260461'"
-            }
+    always {
+        script {
+            sh 'C:\\curl-8.4.0_7-win64-mingw\\curl-8.4.0_7-win64-mingw\\bin\\curl --location --request POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" --form text="Hello Zydd" --form chat_id="${TELEGRAM_CHAT_ID}"'
         }
     }
+}
+
 }
