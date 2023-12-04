@@ -28,5 +28,11 @@ pipeline {
                 build job: 'telegram-notification'
             }
         }
+        failure {
+            script {
+                // Trigger another pipeline upon failure
+                build job: 'telegram-notification'
+            }
+        }
     }
 }
