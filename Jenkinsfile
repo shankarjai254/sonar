@@ -7,17 +7,15 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                checkout scm
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/ZudaPradana/sonar']])
                 echo 'Git Checkout Completed'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                // Add a delay to give time to the Spring Boot server
-                sleep time: 1, unit: 'MINUTES'
-                withSonarQubeEnv('sq1') {
-                    sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=sonar-analysis -Dsonar.projectName="sonar-analysis" -Dsonar.host.url=http://localhost:9000'
+                withSonarQubeEnv('ServerNameSonar') {
+                    bat '''mvn clean verify sonar:sonar -Dsonar.projectKey=ProjectNameSonar -Dsonar.projectName='ProjectNameSonar' -Dsonar.host.url=http://localhost:9000''' //port 9000 is default for sonar
                     echo 'SonarQube Analysis Completed'
                 }
             }
