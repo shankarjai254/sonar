@@ -9,7 +9,6 @@ pipeline {
         // These are the IDs of the stored credentials, not the actual token and chat ID values
         TELEGRAM_TOKEN_ID = 'telegram-credentials'
         TELEGRAM_CHAT_ID_ID = 'Telegram_ChatID'
-        CURL_PATH = 'C:\\curl-8.4.0_7-win64-mingw\\curl-8.4.0_7-win64-mingw\\bin\\curl.exe'
     }
 
     stages {
@@ -30,33 +29,17 @@ pipeline {
                 }
             }
         }
-        stage('Notify Telegram') {
-            steps {
-                script {
-                    withCredentials([string(credentialsId: 'telegram-credentials', variable: 'telegramToken'),
-                                     string(credentialsId: 'Telegram_ChatID', variable: 'telegramChatId')]) {
-
-                        try {
-                            def response = sh(script: """
-                                curl --location --request POST \
-                                "https://api.telegram.org/bot${telegramToken}/sendMessage" \
-                                --form "text=Hello Zydd" \
-                                --form "chat_id=${telegramChatId}"
-                            """, returnStatus: true)
-
-                            if (response == 0) {
-                                echo "Telegram notification sent successfully"
-                            } else {
-                                error "Failed to send Telegram notification"
-                            }
-                        } catch (Exception e) {
-                            currentBuild.result = 'FAILURE'
-                            echo "Error: ${e.message}"
-                        }
-                    }
-                }
+    }
+    post {
+        success {
+            script {
+                bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"Pipeline succeeded!\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
             }
         }
-    
+        failure {
+            script {
+                bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"Pipeline failed!\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
+            }
+        }
     }
 }
