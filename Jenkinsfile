@@ -21,4 +21,12 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            script {
+                // Trigger another pipeline upon success
+                build job: 'telegram-notification'
+            }
+        }
+    }
 }
