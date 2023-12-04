@@ -5,10 +5,9 @@ pipeline {
     }
 
     environment {
-        // Define your Telegram Token and Chat ID as credentials in Jenkins
-        // These are the IDs of the stored credentials, not the actual token and chat ID values
-        TOKEN = 'telegram-credentials'
-        CHAT_ID = 'Telegram_ChatID'
+        // Telegram configuration
+        TOKEN = credentials('telegram-credentials')
+        CHAT_ID = credentials('Telegram_ChatID')
     }
 
     stages {
