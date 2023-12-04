@@ -1,60 +1,17 @@
 pipeline {
     agent any
 
-    environment {
-        // Define your environment variables
-        CHAT_ID = ''
-        TOKEN = ''
-        TEXT_PRE_BUILD = ''
-        TEXT_SUCCESS_BUILD = ''
-        TEXT_FAILURE_BUILD = ''
-    }
-
     stages {
-        stage('Pre-Build') {
+        stage('Notify Telegram') {
             steps {
                 script {
-                    // Menggunakan blok withCredentials untuk mengambil nilai
-                    withCredentials([string(credentialsId: 'telegram-credentials', variable: 'TOKEN'),
-                                     string(credentialsId: 'Telegram_ChatID', variable: 'CHAT_ID')]) {
-
-                        // Menggunakan variabel-variabel yang telah diambil
-                        TEXT_PRE_BUILD = "Some text with ${TOKEN} and ${CHAT_ID}"
-                    }
-                    // Eksekusi sh di luar blok withCredentials
-                    sh "curl --location --request POST 'https://api.telegram.org/bot${TOKEN}/sendMessage' --form text='${TEXT_PRE_BUILD}' --form chat_id='${CHAT_ID}'"
+                    def curlCommand = """
+                        curl -X POST -H 'Content-Type: application/json' \
+                        -d '{"chat_id":725260461, "text": "Hello Zydd", "disable_notification": false}' \
+                        https://api.telegram.org/bot6356002838:AAE48btgtfdOlX-Zz0RYI9tC7Rhg4a43Sf4/sendMessage
+                    """
+                    sh curlCommand
                 }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
-    }
-
-    post {
-        success {
-            script {
-                // Menggunakan blok withCredentials untuk mengambil nilai
-                withCredentials([string(credentialsId: 'telegram-credentials', variable: 'TOKEN'),
-                                 string(credentialsId: 'Telegram_ChatID', variable: 'CHAT_ID')]) {
-
-                    // Menggunakan variabel-variabel yang telah diambil
-                    TEXT_SUCCESS_BUILD = "${JOB_NAME} is Success"
-                }
-                // Eksekusi sh di luar blok withCredentials
-                sh "curl --location --request POST 'https://api.telegram.org/bot${TOKEN}/sendMessage' --form text='${TEXT_SUCCESS_BUILD}' --form chat_id='${CHAT_ID}'"
-            }
-        }
-
-        failure {
-            script {
-                // Menggunakan variabel-variabel yang telah diambil
-                TEXT_FAILURE_BUILD = "${JOB_NAME} is Failure"
-                // Eksekusi sh di luar blok withCredentials
-                sh "curl --location --request POST 'https://api.telegram.org/bot${TOKEN}/sendMessage' --form text='${TEXT_FAILURE_BUILD}' --form chat_id='${CHAT_ID}'"
             }
         }
     }
