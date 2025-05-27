@@ -1,25 +1,66 @@
 pipeline {
     agent any
-
+    
+    tools {
+        maven 'Maven_3.8.8_System'     // or your Maven tool name in Jenkins
+        jdk 'javajenkins'  
+    }
+    
     stages {
-        stage('Checkout') {
+        stage('Git Checkout') {
             steps {
-                git 'https://github.com/shankarjai254/sonar.git'
+                // Checkout code from the repository
+                checkout scm
+                
+                // Display information about the checked out code
+                sh 'git log -1 --pretty=format:"%h - %an: %s"'
             }
         }
-
-        stage('Build') {
+        
+        stage('Maven Build') {
             steps {
-                sh 'mvn clean install'
+                // Run Maven build
+                sh 'mvn clean package'
+            }
+            post {
+                success {
+                    // Archive the artifacts
+                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                }
+                failure {
+                    echo 'Maven build failed'
+                }
             }
         }
-
+        
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonar') {
+                // Run SonarQube analysis
+                withSonarQubeEnv('sonarqube') {
                     sh 'mvn sonar:sonar'
                 }
             }
+            post {
+                success {
+                    echo 'SonarQube analysis completed successfully'
+                }
+                failure {
+                    echo 'SonarQube analysis failed'
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline completed successfully'
+        }
+        failure {
+            echo 'Pipeline failed'
+        }
+        always {
+            // Clean workspace after build
+            cleanWs()
         }
     }
 }
